@@ -6,26 +6,27 @@ spring:
     name: gateway
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/users/**
+      mvc:
+        routes:
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/api/users/**
 
-        - id: product-service
-          uri: lb://product-service
-          predicates:
-            - Path=/api/products/**
+          - id: product-service
+            uri: lb://product-service
+            predicates:
+              - Path=/api/products/**
 
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/api/orders/**
+          - id: order-service
+            uri: lb://order-service
+            predicates:
+              - Path=/api/orders/**
 
-        - id: notification-service
-          uri: lb://notification-service
-          predicates:
-            - Path=/api/notifications/**
+          - id: notification-service
+            uri: lb://notification-service
+            predicates:
+              - Path=/api/notifications/**
 
 eureka:
   client:

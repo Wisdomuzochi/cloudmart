@@ -1,1 +1,203 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* ─── Light theme palette ─── */
+  --bg:        #f2f3f7;
+  --surface:   #ffffff;
+  --surface2:  #f7f8fc;
+  --surface3:  #edeef5;
+
+  /* Brand colors — adjusted for light bg */
+  --green:     #00a859;
+  --green-dim: #e6f9ef;
+  --green-dark:#007d42;
+  --blue:      #3355ee;
+  --blue-dim:  #eaedff;
+  --red:       #e02842;
+  --red-dim:   #fff0f2;
+  --gold:      #c48f00;
+  --gold-dim:  #fff8e1;
+
+  /* Text & UI */
+  --text:      #1a1a30;
+  --muted:     #6b7280;
+  --border:    #e2e5ef;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow:    0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 28px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.05);
+
+  --radius:    12px;
+  --radius-sm: 8px;
+  --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ─── Buttons ─── */
+.btn {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: var(--transition);
+  transform: translateZ(0);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+/* Ripple */
+.btn::after {
+  content: '';
+  position: absolute;
+  width: 120px; height: 120px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+.btn:active::after { animation: ripple-out 0.4s ease; }
+.btn:active { transform: scale(0.97); }
+
+@keyframes ripple-out {
+  to { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  color: #fff;
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0,168,89,0.25);
+}
+.btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(0,168,89,0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+}
+.btn-secondary:hover {
+  background: var(--blue-dim);
+  box-shadow: 0 2px 8px rgba(51,85,238,0.15);
+}
+
+.btn-danger {
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1.5px solid rgba(224,40,66,0.3);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+.btn-danger:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* ─── Inputs ─── */
+.input-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.input-group label {
+  font-size: 0.75rem; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+.input-group input {
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: var(--transition);
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-dim);
+}
+
+.input-group input::placeholder { color: #b0b5c3; }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.card:hover {
+  box-shadow: var(--shadow);
+  border-color: rgba(51,85,238,0.15);
+}
+
+/* ─── Badges ─── */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.badge-green { background: var(--green-dim); color: var(--green-dark); border: 1px solid rgba(0,168,89,0.2); }
+.badge-blue  { background: var(--blue-dim);  color: var(--blue);       border: 1px solid rgba(51,85,238,0.2); }
+.badge-red   { background: var(--red-dim);   color: var(--red);        border: 1px solid rgba(224,40,66,0.2); }
+
+/* ─── Spinner ─── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ─── Animations ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes spin    { to { transform: rotate(360deg); } }
+@keyframes bounce-in {
+  0%  { transform: scale(0.3); opacity:0; }
+  50% { transform: scale(1.08); }
+  70% { transform: scale(0.96); }
+  100%{ transform: scale(1);   opacity:1; }
+}
+
+.fade-up { animation: fadeUp 0.4s ease both; }
+.fade-in { animation: fadeIn 0.3s ease both; }
