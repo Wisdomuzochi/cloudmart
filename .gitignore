@@ -1,0 +1,23 @@
+# Java
+target/
+*.class
+*.jar
+
+# Spring Boot
+*.log
+application-local.properties
+
+# Angular
+node_modules/
+dist/
+
+# IntelliJ / VS Code
+.idea/
+.vscode/
+*.iml
+
+# Docker
+.env
+
+# MacOS
+.DS_Store
