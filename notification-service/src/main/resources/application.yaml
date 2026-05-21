@@ -1,3 +1,23 @@
+server:
+  port: 8085
+
 spring:
   application:
     name: notification-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: cloudmart
+    password: cloudmart123
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+rabbitmq:
+  queue: order.placed.queue
+  exchange: cloudmart.exchange
+  routing-key: order.placed
