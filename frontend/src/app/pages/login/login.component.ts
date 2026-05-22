@@ -202,7 +202,7 @@ import { UserService } from '../../core/services/user.service';
     .logo-area h1 {
       font-size: 2rem;
       font-weight: 300;
-      color: var(--text);
+      color: #ffffff;
       letter-spacing: -0.04em;
     }
 
@@ -212,7 +212,7 @@ import { UserService } from '../../core/services/user.service';
     }
 
     .tagline {
-      color: var(--muted);
+      color: rgba(255,255,255,0.6);
       font-size: 0.9rem;
     }
 
@@ -237,12 +237,12 @@ import { UserService } from '../../core/services/user.service';
       display: block;
       font-size: 0.9rem;
       font-weight: 600;
-      color: var(--text);
+      color: #ffffff;
     }
 
     .feature p {
       font-size: 0.8rem;
-      color: var(--muted);
+      color: rgba(255,255,255,0.55);
       margin: 0;
     }
 
@@ -250,7 +250,7 @@ import { UserService } from '../../core/services/user.service';
       display: flex;
       gap: 1.5rem;
       padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid rgba(255,255,255,0.12);
     }
 
     .stat {
@@ -267,7 +267,7 @@ import { UserService } from '../../core/services/user.service';
 
     .stat-l {
       font-size: 0.75rem;
-      color: var(--muted);
+      color: rgba(255,255,255,0.5);
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }

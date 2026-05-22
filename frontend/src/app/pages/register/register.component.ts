@@ -205,17 +205,17 @@ import { UserService } from '../../core/services/user.service';
 
     .logo-area h1 {
       font-size: 1.9rem; font-weight: 300;
-      color: var(--text); letter-spacing: -0.03em; line-height: 1.2;
+      color: #ffffff; letter-spacing: -0.03em; line-height: 1.2;
     }
 
     .logo-area h1 strong { font-weight: 800; color: var(--green); }
-    .tagline { color: var(--muted); font-size: 0.9rem; }
+    .tagline { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
 
     .perks { display: flex; flex-direction: column; gap: 0.9rem; }
 
     .perk {
       display: flex; align-items: center; gap: 0.8rem;
-      font-size: 0.88rem; color: var(--text);
+      font-size: 0.88rem; color: rgba(255,255,255,0.85);
     }
 
     .perk-check {
@@ -229,13 +229,13 @@ import { UserService } from '../../core/services/user.service';
     .trust-badge {
       display: flex; align-items: center; gap: 0.8rem;
       padding: 1rem; border-radius: var(--radius-sm);
-      background: var(--surface); border: 1px solid var(--border);
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
     }
 
     .shield { font-size: 1.8rem; }
 
-    .trust-badge strong { display: block; font-size: 0.88rem; color: var(--text); }
-    .trust-badge p { font-size: 0.75rem; color: var(--muted); margin: 0; }
+    .trust-badge strong { display: block; font-size: 0.88rem; color: #ffffff; }
+    .trust-badge p { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin: 0; }
 
     /* ─── Form ─── */
     .auth-form {

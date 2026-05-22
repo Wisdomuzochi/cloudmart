@@ -165,6 +165,10 @@ interface ProfileStats {
                 <div class="card-title">Mot de passe</div>
                 <p class="security-desc">Changez votre mot de passe régulièrement pour sécuriser votre compte.</p>
                 <div class="input-group">
+                  <label>Mot de passe actuel</label>
+                  <input type="password" [(ngModel)]="currentPass" placeholder="Mot de passe actuel"/>
+                </div>
+                <div class="input-group">
                   <label>Nouveau mot de passe</label>
                   <input type="password" [(ngModel)]="newPass" placeholder="Nouveau mot de passe"/>
                 </div>
@@ -175,8 +179,17 @@ interface ProfileStats {
                 @if (newPass && confirmPass && newPass !== confirmPass) {
                   <div class="alert-error">Les mots de passe ne correspondent pas</div>
                 }
-                <button class="btn btn-primary" [disabled]="!newPass || newPass !== confirmPass">
-                  🔒 Mettre à jour
+                @if (passwordError) {
+                  <div class="alert-error fade-in">⚠️ {{ passwordError }}</div>
+                }
+                @if (passwordSuccess) {
+                  <div class="alert-success fade-in">✓ Mot de passe mis à jour !</div>
+                }
+                <button class="btn btn-primary"
+                  [disabled]="!currentPass || !newPass || newPass !== confirmPass || passwordLoading"
+                  (click)="changePassword(user.id)">
+                  @if (passwordLoading) { <span class="spinner"></span> } @else { 🔒 }
+                  Mettre à jour
                 </button>
               </div>
 
@@ -194,8 +207,37 @@ interface ProfileStats {
 
               <div class="card danger-zone">
                 <div class="card-title danger-title">⚠️ Zone dangereuse</div>
-                <p class="security-desc">La déconnexion efface votre session locale.</p>
-                <button class="btn btn-danger" (click)="logout()">⏏ Se déconnecter</button>
+
+                <div class="danger-row">
+                  <div class="danger-info">
+                    <strong>Se déconnecter</strong>
+                    <p>Efface votre session locale.</p>
+                  </div>
+                  <button class="btn btn-danger" (click)="logout()">⏏ Se déconnecter</button>
+                </div>
+
+                <div class="danger-row danger-row--delete">
+                  <div class="danger-info">
+                    <strong>Supprimer le compte</strong>
+                    <p>Supprime définitivement votre compte et toutes vos données.</p>
+                  </div>
+                  @if (!deleteConfirm) {
+                    <button class="btn btn-delete" (click)="deleteConfirm = true">🗑️ Supprimer le compte</button>
+                  } @else {
+                    <div class="delete-confirm fade-in">
+                      <p class="confirm-text">⚠️ Action <strong>irréversible</strong>. Toutes vos données seront perdues.</p>
+                      <div class="confirm-btns">
+                        <button class="btn btn-delete"
+                          [disabled]="deleteLoading"
+                          (click)="deleteAccount(user.id)">
+                          @if (deleteLoading) { <span class="spinner"></span> } @else { 🗑️ }
+                          Confirmer
+                        </button>
+                        <button class="btn btn-secondary" (click)="deleteConfirm = false">Annuler</button>
+                      </div>
+                    </div>
+                  }
+                </div>
               </div>
             </div>
           </div>
@@ -265,10 +307,10 @@ interface ProfileStats {
 
     .hero-info h1 {
       font-size: 1.8rem; font-weight: 800;
-      color: var(--text); letter-spacing: -0.03em;
+      color: #ffffff; letter-spacing: -0.03em;
     }
 
-    .hero-email { color: var(--muted); font-size: 0.9rem; }
+    .hero-email { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
 
     .hero-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
@@ -417,8 +459,38 @@ interface ProfileStats {
     .session-item p { font-size: 0.78rem; color: var(--muted); margin: 0; }
     .session-item .badge { margin-left: auto; }
 
-    .danger-zone { border-color: rgba(255,68,102,0.3); }
-    .danger-title { color: var(--red) !important; }
+    .danger-zone { border-color: rgba(255,68,102,0.3); display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
+    .danger-title { color: var(--red) !important; padding: 1.2rem 1.5rem 0; }
+
+    .danger-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .danger-row:last-child { border-bottom: none; }
+    .danger-row--delete { background: rgba(224,40,66,0.03); }
+
+    .danger-info { flex: 1; }
+    .danger-info strong { display: block; font-size: 0.88rem; color: var(--text); margin-bottom: 0.2rem; }
+    .danger-info p { font-size: 0.78rem; color: var(--muted); margin: 0; }
+
+    .btn-delete {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-delete:hover { background: #c0001f; }
+    .btn-delete:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .delete-confirm { display: flex; flex-direction: column; gap: 0.7rem; align-items: flex-end; }
+    .confirm-text { font-size: 0.78rem; color: var(--red); text-align: right; }
+    .confirm-btns { display: flex; gap: 0.6rem; }
 
     /* Activity tab */
     .empty-activity {
@@ -451,8 +523,14 @@ export class ProfileComponent {
   editLast = '';
   editEmail = '';
   editSuccess = false;
+  currentPass = '';
   newPass = '';
   confirmPass = '';
+  passwordLoading = false;
+  passwordError = '';
+  passwordSuccess = false;
+  deleteConfirm = false;
+  deleteLoading = false;
 
   stats$: Observable<ProfileStats>;
 
@@ -507,6 +585,40 @@ export class ProfileComponent {
     if (orders >= 20) return '🥇 Gold · Membre fidèle';
     if (orders >= 10) return `🥈 Silver → Gold (${orders}/20 commandes)`;
     return `🥉 Bronze → Silver (${orders}/10 commandes)`;
+  }
+
+  changePassword(userId: number): void {
+    this.passwordError = '';
+    this.passwordSuccess = false;
+    this.passwordLoading = true;
+    this.userService.changePassword(userId, this.currentPass, this.newPass).subscribe({
+      next: () => {
+        this.passwordLoading = false;
+        this.passwordSuccess = true;
+        this.currentPass = '';
+        this.newPass = '';
+        this.confirmPass = '';
+        setTimeout(() => this.passwordSuccess = false, 3000);
+      },
+      error: (err) => {
+        this.passwordLoading = false;
+        this.passwordError = err.error?.message || 'Erreur lors du changement de mot de passe';
+      }
+    });
+  }
+
+  deleteAccount(userId: number): void {
+    this.deleteLoading = true;
+    this.userService.deleteAccount(userId).subscribe({
+      next: () => {
+        this.userService.logout();
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.deleteLoading = false;
+        this.deleteConfirm = false;
+      }
+    });
   }
 
   logout(): void {

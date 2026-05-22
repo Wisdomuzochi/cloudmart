@@ -177,8 +177,9 @@ interface OrdersState {
       padding: 0.25rem 0.7rem; border-radius: 999px;
     }
 
-    .status-pending  { background: rgba(255,170,0,0.15); color: #ffaa00; border: 1px solid rgba(255,170,0,0.4); }
-    .status-paid     { background: var(--blue-dim);  color: var(--blue);  border: 1px solid var(--blue); }
+    .status-pending   { background: rgba(255,170,0,0.15); color: #ffaa00; border: 1px solid rgba(255,170,0,0.4); }
+    .status-confirmed { background: var(--green-dim); color: var(--green-dark); border: 1px solid rgba(0,168,89,0.4); }
+    .status-paid      { background: var(--blue-dim);  color: var(--blue);  border: 1px solid var(--blue); }
     .status-shipped  { background: rgba(0,180,255,0.15); color: #00b4ff; border: 1px solid rgba(0,180,255,0.4); }
     .status-delivered { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
     .status-cancelled { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
@@ -245,9 +246,10 @@ export class OrdersComponent {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      'PENDING': '⏳ En attente',
-      'PAID': '✅ Payée',
-      'SHIPPED': '🚚 Expédiée',
+      'PENDING':   '⏳ En attente',
+      'CONFIRMED': '✅ Confirmée',
+      'PAID':      '💳 Payée',
+      'SHIPPED':   '🚚 Expédiée',
       'DELIVERED': '📬 Livrée',
       'CANCELLED': '✕ Annulée',
     };

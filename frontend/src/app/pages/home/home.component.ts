@@ -24,7 +24,7 @@ interface ProductsState {
           <div class="hero-text fade-up">
             <p class="hero-pre">Bienvenue sur CloudMart 🛒</p>
             <h1>Tech premium,<br><span class="hero-accent">prix imbattables</span></h1>
-            <p class="hero-sub">Smartphones, laptops, audio — livraison offerte dès 50€</p>
+            <p class="hero-sub">Smartphones, laptops, audio et autres — livraison offerte dès 50€</p>
           </div>
           <div class="hero-badges fade-up">
             <span class="hb">🚚 Livraison 24h</span>

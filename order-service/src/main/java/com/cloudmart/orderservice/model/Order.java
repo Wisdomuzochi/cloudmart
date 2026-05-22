@@ -35,7 +35,7 @@ public class Order {
     private Double totalAmount;
 
     @Column(nullable = false)
-    private String status = "PENDING";
+    private String status = "CONFIRMED";
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

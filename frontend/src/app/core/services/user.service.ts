@@ -29,7 +29,7 @@ export interface LoginRequest {
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8090/api/users';
+  private apiUrl = '/api/users';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
@@ -66,6 +66,14 @@ export class UserService {
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  changePassword(userId: number, currentPassword: string, newPassword: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${userId}/password`, { currentPassword, newPassword });
+  }
+
+  deleteAccount(userId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${userId}`);
   }
 
   isLoggedIn(): boolean {

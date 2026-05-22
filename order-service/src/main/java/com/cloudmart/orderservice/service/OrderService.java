@@ -26,7 +26,7 @@ public class OrderService {
         order.setUserEmail(request.getUserEmail());
         order.setItems(request.getItems());
         order.setTotalAmount(total);
-        order.setStatus("PENDING");
+        order.setStatus("CONFIRMED");
 
         // Sauvegarde en BDD
         Order saved = orderRepository.save(order);

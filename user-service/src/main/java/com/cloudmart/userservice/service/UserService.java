@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cloudmart.userservice.dto.ChangePasswordRequest;
 import com.cloudmart.userservice.dto.LoginRequest;
 import com.cloudmart.userservice.dto.RegisterRequest;
 import com.cloudmart.userservice.model.User;
@@ -47,6 +48,25 @@ public class UserService {
     public User findById(Long id) {
         return userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+    }
+
+    public void changePassword(Long id, ChangePasswordRequest request) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Mot de passe actuel incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Utilisateur introuvable");
+        }
+        userRepository.deleteById(id);
     }
 
     public List<User> findAll() {
