@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_PREFIX = 'cloudmart'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo '📥 Récupération du code source...'
+                checkout scm
+            }
+        }
+
+        stage('Tests — User Service') {
+            steps {
+                echo '🧪 Lancement des tests User Service...'
+                dir('user-service') {
+                    sh 'mvn test -q'
+                }
+            }
+            post {
+                success {
+                    echo '✅ User Service — tous les tests passent'
+                }
+                failure {
+                    echo '❌ User Service — échec des tests'
+                }
+            }
+        }
+
+        stage('Tests — Product Service') {
+            steps {
+                echo '🧪 Lancement des tests Product Service...'
+                dir('product-service') {
+                    sh 'mvn test -q'
+                }
+            }
+            post {
+                success {
+                    echo '✅ Product Service — tous les tests passent'
+                }
+                failure {
+                    echo '❌ Product Service — échec des tests'
+                }
+            }
+        }
+
+        stage('Tests — Order Service') {
+            steps {
+                echo '🧪 Lancement des tests Order Service...'
+                dir('order-service') {
+                    sh 'mvn test -q'
+                }
+            }
+            post {
+                success {
+                    echo '✅ Order Service — tous les tests passent'
+                }
+                failure {
+                    echo '❌ Order Service — échec des tests'
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                echo '🐳 Construction des images Docker...'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-eureka ./eureka-server'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-gateway ./gateway'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-user ./user-service'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-product ./product-service'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-order ./order-service'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-notification ./notification-service'
+                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-frontend ./frontend'
+            }
+            post {
+                success {
+                    echo '✅ Toutes les images Docker construites'
+                }
+            }
+        }
+
+        stage('Rapport Final') {
+            steps {
+                echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+                echo '✅ Pipeline CloudMart terminé !'
+                echo '✅ Tests : OK'
+                echo '✅ Images Docker : OK'
+                echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '🎉 Pipeline réussi — CloudMart est prêt !'
+        }
+        failure {
+            echo '🚨 Pipeline échoué — vérifier les logs'
+        }
+    }
+}
