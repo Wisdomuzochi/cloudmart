@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_PREFIX = 'cloudmart'
+        MVN = '/usr/bin/mvn'
     }
 
     stages {
@@ -18,16 +19,12 @@ pipeline {
             steps {
                 echo '🧪 Lancement des tests User Service...'
                 dir('user-service') {
-                    sh 'mvn test -q'
+                    sh '${MVN} test -q'
                 }
             }
             post {
-                success {
-                    echo '✅ User Service — tous les tests passent'
-                }
-                failure {
-                    echo '❌ User Service — échec des tests'
-                }
+                success { echo '✅ User Service — tous les tests passent' }
+                failure { echo '❌ User Service — échec des tests' }
             }
         }
 
@@ -35,16 +32,12 @@ pipeline {
             steps {
                 echo '🧪 Lancement des tests Product Service...'
                 dir('product-service') {
-                    sh 'mvn test -q'
+                    sh '${MVN} test -q'
                 }
             }
             post {
-                success {
-                    echo '✅ Product Service — tous les tests passent'
-                }
-                failure {
-                    echo '❌ Product Service — échec des tests'
-                }
+                success { echo '✅ Product Service — tous les tests passent' }
+                failure { echo '❌ Product Service — échec des tests' }
             }
         }
 
@@ -52,16 +45,12 @@ pipeline {
             steps {
                 echo '🧪 Lancement des tests Order Service...'
                 dir('order-service') {
-                    sh 'mvn test -q'
+                    sh '${MVN} test -q'
                 }
             }
             post {
-                success {
-                    echo '✅ Order Service — tous les tests passent'
-                }
-                failure {
-                    echo '❌ Order Service — échec des tests'
-                }
+                success { echo '✅ Order Service — tous les tests passent' }
+                failure { echo '❌ Order Service — échec des tests' }
             }
         }
 
@@ -77,9 +66,7 @@ pipeline {
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-frontend ./frontend'
             }
             post {
-                success {
-                    echo '✅ Toutes les images Docker construites'
-                }
+                success { echo '✅ Toutes les images Docker construites' }
             }
         }
 
@@ -95,11 +82,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo '🎉 Pipeline réussi — CloudMart est prêt !'
-        }
-        failure {
-            echo '🚨 Pipeline échoué — vérifier les logs'
-        }
+        success { echo '🎉 Pipeline réussi — CloudMart est prêt !' }
+        failure { echo '🚨 Pipeline échoué — vérifier les logs' }
     }
 }
