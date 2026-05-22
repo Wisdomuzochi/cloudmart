@@ -160,8 +160,9 @@ import { RouterLink } from '@angular/router';
             <h2 class="author-name">Wisdom Uzochi</h2>
             <p class="author-bio">
               Passionné par l'architecture logicielle, le développement full-stack et
-              les systèmes distribués. CloudMart est un projet de démonstration conçu
-              pour explorer les microservices Java avec Spring Boot et Angular.
+              le DevOps — avec un attrait particulier pour le Cloud et l'ingénierie systèmes.
+              CloudMart est un projet de démonstration conçu pour explorer les microservices
+              Java avec Spring Boot et Angular, conteneurisés sous Docker.
             </p>
             <div class="author-links">
               <a href="mailto:uzochiwisdom72@gmail.com" class="contact-btn">
