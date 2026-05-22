@@ -104,11 +104,11 @@ export class FavoritesComponent {
   constructor(public favoritesService: FavoritesService) {}
 
   onAddToCart(product: any): void {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
     const existing = cart.find((i: any) => i.productId === product.id);
     if (existing) existing.quantity++;
-    else cart.push({ productId: product.id, productName: product.name, quantity: 1, unitPrice: product.price });
-    localStorage.setItem('cart', JSON.stringify(cart));
+    else cart.push({ productId: product.id, productName: product.name, quantity: 1, unitPrice: product.price, imageUrl: (product as any).imageUrl || '' });
+    sessionStorage.setItem('cart', JSON.stringify(cart));
     this.cartMessage = `${product.name} ajouté au panier`;
     setTimeout(() => this.cartMessage = '', 2000);
   }

@@ -21,16 +21,28 @@ interface ProductsState {
       <!-- Hero banner -->
       <div class="hero-banner">
         <div class="hero-inner">
-          <div class="hero-text fade-up">
-            <p class="hero-pre">Bienvenue sur CloudMart 🛒</p>
-            <h1>Tech premium,<br><span class="hero-accent">prix imbattables</span></h1>
-            <p class="hero-sub">Smartphones, laptops, audio et autres — livraison offerte dès 50€</p>
+
+          <div class="hero-cats fade-up">
+            <span class="hcat">💄 Beauté</span>
+            <span class="hcat">👗 Mode</span>
+            <span class="hcat">💻 Tech</span>
+            <span class="hcat">🪑 Maison</span>
+            <span class="hcat">🍳 Cuisine</span>
+            <span class="hcat">👟 Chaussures</span>
           </div>
+
+          <div class="hero-text fade-up">
+            <h1>Tout ce que vous aimez,<br><span class="hero-accent">au meilleur prix</span></h1>
+            <p class="hero-sub">Mode, beauté, tech, déco & bien plus — livraison offerte dès 50€</p>
+          </div>
+
           <div class="hero-badges fade-up">
             <span class="hb">🚚 Livraison 24h</span>
             <span class="hb">🔄 Retours 30j</span>
             <span class="hb">🛡️ Paiement sécurisé</span>
+            <span class="hb">⭐ 4.9 / 5</span>
           </div>
+
         </div>
       </div>
 
@@ -102,9 +114,20 @@ interface ProductsState {
   styles: [`
     /* ─── Hero ─── */
     .hero-banner {
-      background: linear-gradient(135deg, #1a1a38 0%, #0f2040 50%, #0d2828 100%);
+      background: linear-gradient(135deg, #0d0d20 0%, #111130 40%, #0a1a28 70%, #0d1f18 100%);
       margin: 0 -1.5rem;
-      padding: 3rem 1.5rem;
+      padding: 2.5rem 1.5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(0,168,89,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 30%, rgba(51,85,238,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 100%, rgba(0,168,89,0.06) 0%, transparent 50%);
     }
 
     .hero-inner {
@@ -112,38 +135,64 @@ interface ProductsState {
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.5rem;
+      position: relative; z-index: 1;
     }
 
-    .hero-pre {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.55);
+    /* Category pills */
+    .hero-cats { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .hcat {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.75);
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
       font-weight: 500;
-      letter-spacing: 0.05em;
+      backdrop-filter: blur(6px);
+      transition: all 0.2s ease;
     }
 
+    .hcat:hover {
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Title */
     .hero-text h1 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
       font-weight: 900;
       color: #fff;
       letter-spacing: -0.04em;
-      line-height: 1.15;
-      margin-top: 0.3rem;
+      line-height: 1.12;
     }
 
-    .hero-accent { color: var(--green); }
+    .hero-accent {
+      background: linear-gradient(90deg, var(--green) 0%, #00d4aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-    .hero-sub { color: rgba(255,255,255,0.6); font-size: 1rem; margin-top: 0.5rem; }
+    .hero-sub {
+      color: rgba(255,255,255,0.58);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
 
-    .hero-badges { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    /* Badges */
+    .hero-badges { display: flex; gap: 0.55rem; flex-wrap: wrap; }
 
     .hb {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.13);
+      color: rgba(255,255,255,0.78);
       padding: 0.35rem 0.85rem;
       border-radius: 999px;
-      font-size: 0.78rem;
+      font-size: 0.77rem;
       font-weight: 500;
       backdrop-filter: blur(4px);
     }
@@ -329,7 +378,7 @@ export class HomeComponent {
   onCategoryChange(): void {}
 
   onAddToCart(product: Product): void {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
     const existing = cart.find((i: any) => i.productId === product.id);
     if (existing) {
       existing.quantity += 1;
@@ -338,10 +387,11 @@ export class HomeComponent {
         productId: product.id,
         productName: product.name,
         quantity: 1,
-        unitPrice: product.price
+        unitPrice: product.price,
+        imageUrl: product.imageUrl || ''
       });
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
+    sessionStorage.setItem('cart', JSON.stringify(cart));
     this.cartMessage = `${product.name} ajouté au panier`;
     setTimeout(() => this.cartMessage = '', 2000);
   }

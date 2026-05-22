@@ -43,7 +43,14 @@ import { OrderService } from '../../core/services/order.service';
           <div class="cart-items">
             @for (item of items; track item.productId) {
               <div class="cart-item card">
-                <div class="item-icon">{{ getCategoryIcon(item.productName) }}</div>
+                <div class="item-visual">
+                  @if (item.imageUrl) {
+                    <img [src]="item.imageUrl" [alt]="item.productName" class="item-img"
+                         (error)="item.imageUrl = null"/>
+                  } @else {
+                    <span class="item-icon">{{ getCategoryIcon(item.productName) }}</span>
+                  }
+                </div>
                 <div class="item-info">
                   <span class="item-name">{{ item.productName }}</span>
                   <span class="item-unit">{{ item.unitPrice | currency:'EUR':'symbol':'1.2-2' }} / unité</span>
@@ -191,7 +198,14 @@ import { OrderService } from '../../core/services/order.service';
       padding: 1rem 1.2rem;
     }
 
-    .item-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .item-visual {
+      width: 52px; height: 52px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface2); border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .item-img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+    .item-icon { font-size: 1.8rem; }
 
     .item-info { flex: 1; min-width: 0; }
     .item-name { display: block; font-weight: 600; font-size: 0.95rem; color: var(--text); }
@@ -306,7 +320,7 @@ export class CartComponent {
     private router: Router,
     private ngZone: NgZone
   ) {
-    this.items = JSON.parse(localStorage.getItem('cart') || '[]');
+    this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
   }
 
   get total(): number {
@@ -319,11 +333,23 @@ export class CartComponent {
 
   getCategoryIcon(name: string): string {
     const n = name.toLowerCase();
-    if (n.includes('iphone') || n.includes('samsung') || n.includes('galaxy') || n.includes('phone')) return '📱';
-    if (n.includes('macbook') || n.includes('laptop') || n.includes('dell') || n.includes('xps')) return '💻';
-    if (n.includes('ipad') || n.includes('tab')) return '📲';
-    if (n.includes('airpod') || n.includes('sony') || n.includes('wh-') || n.includes('audio')) return '🎧';
-    return '📦';
+    if (n.includes('mascara') || n.includes('lipstick') || n.includes('eyeshadow') || n.includes('nail') || n.includes('makeup') || n.includes('powder')) return '💄';
+    if (n.includes('perfume') || n.includes('cologne') || n.includes('fragrance') || n.includes('parfum')) return '🌸';
+    if (n.includes('serum') || n.includes('moisturizer') || n.includes('skin') || n.includes('lotion') || n.includes('cream')) return '🧴';
+    if (n.includes('shirt') || n.includes('top') || n.includes('blouse') || n.includes('sweater') || n.includes('hoodie')) return '👔';
+    if (n.includes('dress') || n.includes('skirt') || n.includes('gown')) return '👗';
+    if (n.includes('shoe') || n.includes('sneaker') || n.includes('boot') || n.includes('heel') || n.includes('nike') || n.includes('air max')) return '👟';
+    if (n.includes('bag') || n.includes('purse') || n.includes('handbag')) return '👜';
+    if (n.includes('watch') || n.includes('timepiece')) return '⌚';
+    if (n.includes('sunglass') || n.includes('glasses')) return '🕶️';
+    if (n.includes('ring') || n.includes('necklace') || n.includes('bracelet') || n.includes('jewel')) return '💍';
+    if (n.includes('sofa') || n.includes('chair') || n.includes('table') || n.includes('desk') || n.includes('furniture')) return '🪑';
+    if (n.includes('kitchen') || n.includes('pan') || n.includes('knife') || n.includes('blender')) return '🍳';
+    if (n.includes('iphone') || n.includes('samsung') || n.includes('galaxy') || n.includes('phone') || n.includes('smartphone')) return '📱';
+    if (n.includes('macbook') || n.includes('laptop') || n.includes('dell') || n.includes('computer')) return '💻';
+    if (n.includes('ipad') || n.includes('tablet')) return '📲';
+    if (n.includes('airpod') || n.includes('sony') || n.includes('headphone') || n.includes('audio')) return '🎧';
+    return '🛍️';
   }
 
   increase(item: any): void { item.quantity++; this.saveCart(); }
@@ -339,11 +365,11 @@ export class CartComponent {
 
   clearCart(): void {
     this.items = [];
-    localStorage.removeItem('cart');
+    sessionStorage.removeItem('cart');
   }
 
   saveCart(): void {
-    localStorage.setItem('cart', JSON.stringify(this.items));
+    sessionStorage.setItem('cart', JSON.stringify(this.items));
   }
 
   order(): void {
@@ -362,7 +388,7 @@ export class CartComponent {
         this.ngZone.run(() => {
           this.orderDone = true;
           this.loading = false;
-          localStorage.removeItem('cart');
+          sessionStorage.removeItem('cart');
           this.items = [];
         });
         setTimeout(() => this.router.navigate(['/orders']), 2500);

@@ -29,6 +29,9 @@ import { FavoritesService } from '../../core/services/favorites.service';
 
         @if (userService.currentUser$ | async; as user) {
           <a routerLink="/orders" routerLinkActive="active" class="nav-link">Commandes</a>
+          @if (user.role === 'ADMIN') {
+            <a routerLink="/admin" routerLinkActive="active" class="nav-link admin-link">⚙️ Admin</a>
+          }
           <a routerLink="/profile" class="avatar-link" routerLinkActive="active">
             <div class="avatar">{{ user.firstName[0] }}{{ user.lastName[0] }}</div>
             <span class="avatar-name">{{ user.firstName }}</span>
@@ -38,6 +41,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
           <a routerLink="/login" routerLinkActive="active" class="nav-link">Connexion</a>
           <a routerLink="/register" class="btn btn-primary nav-cta">S'inscrire</a>
         }
+        <a routerLink="/about" routerLinkActive="active" class="nav-link">À propos</a>
       </div>
     </nav>
   `,
@@ -159,6 +163,16 @@ import { FavoritesService } from '../../core/services/favorites.service';
       display: flex; align-items: center; justify-content: center;
       padding: 0 3px;
       line-height: 1;
+    }
+
+    .admin-link {
+      color: #00a859 !important;
+      font-weight: 700;
+    }
+
+    .admin-link.active {
+      background: rgba(0,168,89,0.12) !important;
+      color: #007d42 !important;
     }
 
     .logout-btn {

@@ -47,7 +47,12 @@ interface DetailState {
             <div class="product-visual">
               <div class="visual-card">
                 <div class="cat-badge">{{ p.category }}</div>
-                <div class="big-icon">{{ getCategoryIcon(p.category) }}</div>
+                @if (p.imageUrl && !imgError) {
+                  <img [src]="p.imageUrl" [alt]="p.name" class="product-img"
+                       (error)="imgError = true"/>
+                } @else {
+                  <div class="big-icon">{{ getCategoryIcon(p.category) }}</div>
+                }
                 <div class="brand-chip">{{ p.brand }}</div>
               </div>
             </div>
@@ -205,6 +210,15 @@ interface DetailState {
       border: 1px solid rgba(85,102,255,0.3);
     }
 
+    .product-img {
+      width: 100%; max-height: 260px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      transition: transform 0.3s ease;
+    }
+
+    .product-img:hover { transform: scale(1.04); }
+
     .big-icon {
       font-size: 7rem;
       filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
@@ -357,6 +371,7 @@ export class ProductDetailComponent {
   cartMessage = '';
   cartAdded = false;
   isFav = false;
+  imgError = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -376,11 +391,19 @@ export class ProductDetailComponent {
 
   getCategoryIcon(cat: string): string {
     const icons: Record<string, string> = {
-      'Smartphones': '📱', 'Laptops': '💻',
-      'Audio': '🎧', 'Tablettes': '📲',
-      'Accessoires': '⌨️', 'Gaming': '🎮', 'TV': '📺',
+      'beauty': '💄', 'fragrances': '🌸', 'furniture': '🪑',
+      'groceries': '🥦', 'home-decoration': '🏡', 'kitchen-accessories': '🍳',
+      'laptops': '💻', 'mens-shirts': '👔', 'mens-shoes': '👟',
+      'mens-watches': '⌚', 'mobile-accessories': '📱',
+      'motorcycle': '🏍️', 'skin-care': '🧴', 'smartphones': '📱',
+      'sports-accessories': '⚽', 'sunglasses': '🕶️', 'tablets': '📲',
+      'tops': '👕', 'vehicle': '🚗', 'womens-bags': '👜',
+      'womens-dresses': '👗', 'womens-jewellery': '💍', 'womens-shoes': '👠',
+      'womens-watches': '⌚',
+      'Smartphones': '📱', 'Laptops': '💻', 'Audio': '🎧',
+      'Tablettes': '📲', 'Accessoires': '⌨️', 'Gaming': '🎮', 'TV': '📺',
     };
-    return icons[cat] ?? '📦';
+    return icons[cat] ?? '🛍️';
   }
 
   toggleFav(product: Product): void {
@@ -389,11 +412,11 @@ export class ProductDetailComponent {
   }
 
   addToCart(product: Product): void {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
     const existing = cart.find((i: any) => i.productId === product.id);
     if (existing) existing.quantity++;
-    else cart.push({ productId: product.id, productName: product.name, quantity: 1, unitPrice: product.price });
-    localStorage.setItem('cart', JSON.stringify(cart));
+    else cart.push({ productId: product.id, productName: product.name, quantity: 1, unitPrice: product.price, imageUrl: product.imageUrl || '' });
+    sessionStorage.setItem('cart', JSON.stringify(cart));
     this.cartAdded = true;
     this.cartMessage = `${product.name} ajouté au panier !`;
     setTimeout(() => { this.cartAdded = false; this.cartMessage = ''; }, 2500);

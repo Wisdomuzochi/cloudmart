@@ -13,7 +13,7 @@ export class FavoritesService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     if (isPlatformBrowser(this.platformId)) {
-      const saved = localStorage.getItem(this.KEY);
+      const saved = sessionStorage.getItem(this.KEY);
       if (saved) this.favs$.next(JSON.parse(saved));
     }
   }
@@ -29,7 +29,7 @@ export class FavoritesService {
       : [...current, product];
     this.favs$.next(updated);
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(this.KEY, JSON.stringify(updated));
+      sessionStorage.setItem(this.KEY, JSON.stringify(updated));
     }
   }
 

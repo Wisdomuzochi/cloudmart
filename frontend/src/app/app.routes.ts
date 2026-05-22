@@ -7,6 +7,9 @@ import { OrdersComponent } from './pages/orders/orders.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FavoritesComponent } from './pages/favorites/favorites.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { AdminGuard } from './core/guards/admin.guard';
+import { AboutComponent } from './pages/about/about.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,5 +20,7 @@ export const routes: Routes = [
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'favorites', component: FavoritesComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
+  { path: 'about', component: AboutComponent },
   { path: '**', redirectTo: '' }
 ];

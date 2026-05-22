@@ -68,7 +68,13 @@ interface OrdersState {
                 <div class="order-items">
                   @for (item of order.items; track item.productId) {
                     <div class="order-item">
-                      <span class="item-icon">{{ getIcon(item.productName) }}</span>
+                      <div class="item-thumb">
+                        @if (item.imageUrl) {
+                          <img [src]="item.imageUrl" [alt]="item.productName" class="item-img"/>
+                        } @else {
+                          <span class="item-icon">{{ getIcon(item.productName) }}</span>
+                        }
+                      </div>
                       <span class="item-name">{{ item.productName }}</span>
                       <span class="item-qty">× {{ item.quantity }}</span>
                       <span class="item-price">
@@ -199,7 +205,16 @@ interface OrdersState {
 
     .order-item:last-child { border-bottom: none; }
 
-    .item-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .item-thumb {
+      width: 40px; height: 40px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .item-img {
+      width: 40px; height: 40px;
+      object-fit: contain; border-radius: 6px;
+      background: var(--surface2);
+    }
+    .item-icon { font-size: 1.4rem; }
     .item-name { flex: 1; color: var(--text); font-weight: 500; }
     .item-qty { color: var(--muted); min-width: 40px; }
     .item-price { color: var(--green); font-weight: 700; min-width: 80px; text-align: right; }
@@ -258,10 +273,46 @@ export class OrdersComponent {
 
   getIcon(name: string): string {
     const n = name.toLowerCase();
-    if (n.includes('iphone') || n.includes('samsung') || n.includes('phone')) return '📱';
-    if (n.includes('macbook') || n.includes('laptop') || n.includes('dell')) return '💻';
-    if (n.includes('ipad') || n.includes('tab')) return '📲';
-    if (n.includes('airpod') || n.includes('sony') || n.includes('audio')) return '🎧';
-    return '📦';
+    if (n.includes('mascara') || n.includes('lipstick') || n.includes('eyeshadow') ||
+        n.includes('nail') || n.includes('powder') || n.includes('blush') ||
+        n.includes('foundation') || n.includes('concealer') || n.includes('makeup')) return '💄';
+    if (n.includes('perfume') || n.includes('cologne') || n.includes('fragrance') ||
+        n.includes('eau de') || n.includes('parfum')) return '🌸';
+    if (n.includes('serum') || n.includes('moisturizer') || n.includes('skin care') ||
+        n.includes('sunscreen') || n.includes('lotion') || n.includes('cream')) return '🧴';
+    if (n.includes('shirt') || n.includes('top') || n.includes('blouse') ||
+        n.includes('sweater') || n.includes('hoodie') || n.includes('jacket')) return '👔';
+    if (n.includes('dress') || n.includes('skirt') || n.includes('gown')) return '👗';
+    if (n.includes('shoe') || n.includes('sneaker') || n.includes('boot') ||
+        n.includes('heel') || n.includes('loafer') || n.includes('air max') ||
+        n.includes('nike') || n.includes('adidas')) return '👟';
+    if (n.includes('bag') || n.includes('purse') || n.includes('handbag') ||
+        n.includes('wallet') || n.includes('tote')) return '👜';
+    if (n.includes('watch') || n.includes('timepiece')) return '⌚';
+    if (n.includes('sunglass') || n.includes('glasses') || n.includes('shades')) return '🕶️';
+    if (n.includes('ring') || n.includes('necklace') || n.includes('bracelet') ||
+        n.includes('earring') || n.includes('jewel')) return '💍';
+    if (n.includes('sofa') || n.includes('chair') || n.includes('table') ||
+        n.includes('desk') || n.includes('shelf') || n.includes('bed') ||
+        n.includes('furniture')) return '🪑';
+    if (n.includes('kitchen') || n.includes('pan') || n.includes('knife') ||
+        n.includes('blender') || n.includes('cooker') || n.includes('pot')) return '🍳';
+    if (n.includes('plant') || n.includes('vase') || n.includes('candle') ||
+        n.includes('decor') || n.includes('frame') || n.includes('pillow')) return '🏡';
+    if (n.includes('grocery') || n.includes('food') || n.includes('fruit') ||
+        n.includes('vegetable') || n.includes('snack')) return '🥦';
+    if (n.includes('iphone') || n.includes('samsung') || n.includes('galaxy') ||
+        n.includes('phone') || n.includes('smartphone')) return '📱';
+    if (n.includes('macbook') || n.includes('laptop') || n.includes('dell') ||
+        n.includes('notebook') || n.includes('computer')) return '💻';
+    if (n.includes('ipad') || n.includes('tablet')) return '📲';
+    if (n.includes('airpod') || n.includes('sony') || n.includes('headphone') ||
+        n.includes('earphone') || n.includes('speaker') || n.includes('audio')) return '🎧';
+    if (n.includes('charger') || n.includes('cable') || n.includes('case') ||
+        n.includes('accessory') || n.includes('adapter')) return '🔌';
+    if (n.includes('car') || n.includes('vehicle') || n.includes('auto')) return '🚗';
+    if (n.includes('sport') || n.includes('football') || n.includes('gym') ||
+        n.includes('fitness') || n.includes('ball')) return '⚽';
+    return '🛍️';
   }
 }

@@ -10,6 +10,7 @@ export interface Product {
   description: string;
   price: number;
   stock: number;
+  imageUrl?: string;
 }
 
 @Injectable({
@@ -37,11 +38,15 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiUrl}/search?name=${name}`);
   }
 
-  create(product: Product): Observable<Product> {
+  create(product: Partial<Product>): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, product);
   }
 
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  update(id: string, product: Partial<Product>): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }

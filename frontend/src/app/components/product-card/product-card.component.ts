@@ -11,6 +11,19 @@ import { FavoritesService } from '../../core/services/favorites.service';
   template: `
     <div class="card" [class.out-of-stock]="product.stock === 0">
 
+      <!-- Image ou icône -->
+      <div class="card-img-area">
+        @if (product.imageUrl) {
+          <img [src]="product.imageUrl" [alt]="product.name" class="product-img"
+               (error)="imgError = true" [class.hidden]="imgError"/>
+          @if (imgError) {
+            <div class="product-icon">{{ getCategoryIcon(product.category) }}</div>
+          }
+        } @else {
+          <div class="product-icon">{{ getCategoryIcon(product.category) }}</div>
+        }
+      </div>
+
       <!-- Top: category + fav button -->
       <div class="card-top">
         <span class="category-badge">{{ product.category }}</span>
@@ -22,11 +35,6 @@ import { FavoritesService } from '../../core/services/favorites.service';
         >
           {{ isFav ? '❤️' : '🤍' }}
         </button>
-      </div>
-
-      <!-- Icon -->
-      <div class="card-img-area">
-        <div class="product-icon">{{ getCategoryIcon(product.category) }}</div>
       </div>
 
       <!-- Body -->
@@ -118,18 +126,33 @@ import { FavoritesService } from '../../core/services/favorites.service';
     .fav-btn:hover { transform: scale(1.25); }
     .fav-btn:active { transform: scale(0.9); }
 
-    /* Icon area */
+    /* Image / icon area */
     .card-img-area {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      height: 88px;
+      height: 160px;
+      overflow: hidden;
+      background: var(--surface2);
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-top: -1px;
     }
 
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 0.75rem;
+      transition: transform 0.35s ease;
+    }
+
+    .product-img.hidden { display: none; }
+
+    .card:hover .product-img { transform: scale(1.06); }
+
     .product-icon {
-      font-size: 3rem;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+      font-size: 3.5rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
       transition: transform 0.3s ease;
     }
 
@@ -266,6 +289,7 @@ export class ProductCardComponent implements OnInit {
 
   justAdded = false;
   isFav = false;
+  imgError = false;
 
   constructor(private favoritesService: FavoritesService) {}
 
@@ -275,11 +299,21 @@ export class ProductCardComponent implements OnInit {
 
   getCategoryIcon(cat: string): string {
     const icons: Record<string, string> = {
-      'Smartphones': '📱', 'Laptops': '💻',
-      'Audio': '🎧', 'Tablettes': '📲',
-      'Accessoires': '⌨️', 'Gaming': '🎮', 'TV': '📺',
+      // DummyJSON categories
+      'beauty': '💄', 'fragrances': '🌸', 'furniture': '🪑',
+      'groceries': '🥦', 'home-decoration': '🏡', 'kitchen-accessories': '🍳',
+      'laptops': '💻', 'mens-shirts': '👔', 'mens-shoes': '👟',
+      'mens-watches': '⌚', 'mobile-accessories': '📱',
+      'motorcycle': '🏍️', 'skin-care': '🧴', 'smartphones': '📱',
+      'sports-accessories': '⚽', 'sunglasses': '🕶️', 'tablets': '📲',
+      'tops': '👕', 'vehicle': '🚗', 'womens-bags': '👜',
+      'womens-dresses': '👗', 'womens-jewellery': '💍', 'womens-shoes': '👠',
+      'womens-watches': '⌚',
+      // Anciennes catégories
+      'Smartphones': '📱', 'Laptops': '💻', 'Audio': '🎧',
+      'Tablettes': '📲', 'Accessoires': '⌨️', 'Gaming': '🎮', 'TV': '📺',
     };
-    return icons[cat] ?? '📦';
+    return icons[cat] ?? '🛍️';
   }
 
   toggleFav(event: Event): void {

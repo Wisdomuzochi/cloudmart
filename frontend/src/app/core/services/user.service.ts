@@ -35,7 +35,7 @@ export class UserService {
 
   constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: object) {
     if (isPlatformBrowser(this.platformId)) {
-      const saved = localStorage.getItem('currentUser');
+      const saved = sessionStorage.getItem('currentUser');
       if (saved) {
         this.currentUserSubject.next(JSON.parse(saved));
       }
@@ -50,7 +50,7 @@ export class UserService {
     return this.http.post<User>(`${this.apiUrl}/login`, request).pipe(
       tap(user => {
         if (isPlatformBrowser(this.platformId)) {
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          sessionStorage.setItem('currentUser', JSON.stringify(user));
         }
         this.currentUserSubject.next(user);
       })
@@ -59,7 +59,7 @@ export class UserService {
 
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('currentUser');
     }
     this.currentUserSubject.next(null);
   }
