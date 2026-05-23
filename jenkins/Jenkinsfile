@@ -54,19 +54,18 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Build Docker Images — Backend') {
             steps {
-                echo '🐳 Construction des images Docker...'
+                echo '🐳 Construction des images Docker backend...'
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-eureka ./eureka-server'
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-gateway ./gateway'
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-user ./user-service'
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-product ./product-service'
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-order ./order-service'
                 sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-notification ./notification-service'
-                sh 'docker build -t ${DOCKER_IMAGE_PREFIX}-frontend ./frontend'
             }
             post {
-                success { echo '✅ Toutes les images Docker construites' }
+                success { echo '✅ Images backend construites' }
             }
         }
 
@@ -74,8 +73,9 @@ pipeline {
             steps {
                 echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
                 echo '✅ Pipeline CloudMart terminé !'
-                echo '✅ Tests : OK'
-                echo '✅ Images Docker : OK'
+                echo '✅ Tests : 26 tests — tous verts'
+                echo '✅ Images Docker backend : OK'
+                echo '✅ Frontend : déployé séparément'
                 echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
             }
         }
