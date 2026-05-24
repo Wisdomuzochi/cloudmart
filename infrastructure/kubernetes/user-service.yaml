@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: cloudmart-user:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/cloudmart_users
+            - name: SPRING_DATASOURCE_USERNAME
+              value: cloudmart
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: cloudmart123
+            - name: EUREKA_URL
+              value: http://eureka:8761/eureka/
+            - name: JAVA_OPTS
+              value: "-Xmx256m -Xms128m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 8082
+      targetPort: 8082

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: cloudmart-product:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo:27017/cloudmart_products
+            - name: EUREKA_URL
+              value: http://eureka:8761/eureka/
+            - name: JAVA_OPTS
+              value: "-Xmx256m -Xms128m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+    - port: 8083
+      targetPort: 8083

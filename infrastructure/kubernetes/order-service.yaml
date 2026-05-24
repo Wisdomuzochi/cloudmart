@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: cloudmart-order:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8084
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/cloudmart_users
+            - name: SPRING_DATASOURCE_USERNAME
+              value: cloudmart
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: cloudmart123
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: cloudmart
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: cloudmart123
+            - name: EUREKA_URL
+              value: http://eureka:8761/eureka/
+            - name: JAVA_OPTS
+              value: "-Xmx256m -Xms128m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+    - port: 8084
+      targetPort: 8084

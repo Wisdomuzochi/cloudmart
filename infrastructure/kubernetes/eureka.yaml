@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      containers:
+        - name: eureka
+          image: cloudmart-eureka:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8761
+          env:
+            - name: JAVA_OPTS
+              value: "-Xmx128m -Xms64m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka
+spec:
+  selector:
+    app: eureka
+  ports:
+    - port: 8761
+      targetPort: 8761
